@@ -30,7 +30,7 @@ module Stargate
     end
 
     def get(path, options = {})
-      safe_request { @connection.get(@url.path + path, {"Accept" => "application/json"}.merge(options)) }
+      safe_request { @connection.get(@url.path + path, {"Accept" => "application/json", "Accept-Encoding" => "identity"}.merge(options)) }
     end
 
     def get_response(path, options = {})
