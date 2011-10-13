@@ -18,12 +18,13 @@ module Stargate
       end
 
       def verify_success(response)
-        case response
-        when Net::HTTPSuccess
-          true
-        else
-          false
-        end
+        response.successful?
+        # case response
+        # when Net::HTTPSuccess
+        #  true
+        # else
+        #   false
+        # end
       end
     end
   end

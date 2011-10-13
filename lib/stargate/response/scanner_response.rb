@@ -11,14 +11,15 @@ module Stargate
       def parse_content(raw_data)
         case @method
         when :open_scanner
-          case raw_data
-          when Net::HTTPCreated
+          # case raw_data
+          # when Net::HTTPCreated
+          if raw_data.successful?
             Stargate::Model::Scanner.new(:scanner_url => raw_data["Location"])
           else
-            if raw_data.message.include?("TableNotFoundException")
+            if raw_data.content.include?("TableNotFoundException")
               raise TableNotFoundError, "Table #{table_name} Not Found!"
             else
-              raise StandardError, "Unable to open scanner. Received the following message: #{raw_data.message}"
+              raise StandardError, "Unable to open scanner. Received the following message: #{raw_data.content}"
             end
           end
         when :get_rows
@@ -26,11 +27,12 @@ module Stargate
           # to deal with rows already.
           RowResponse.new(raw_data, :show_row).parse
         when :close_scanner
-          case raw_data
-          when Net::HTTPOK
+          # case raw_data
+          # when Net::HTTPOK
+          if raw_data.successful?
             return true
           else
-            raise StandardError, "Unable to close scanner. Received the following message: #{raw_data.message}"
+            raise StandardError, "Unable to close scanner. Received the following message: #{raw_data.content}"
           end
         else
           puts "method '#{@method}' not supported yet"
